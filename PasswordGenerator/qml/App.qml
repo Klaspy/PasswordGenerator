@@ -1,6 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
-import QtQuick.Controls 2.15 as Controls
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import CustomStyle 1.0
@@ -19,9 +19,29 @@ Window {
                                                 family: "Roboto Mono"
                                             })
 
-    Controls.ScrollView {
+
+    HorizontalHeaderView {
+        id: tableHeader
+        syncView: tableView
+        model: workersModel
+
+        delegate: Rectangle {
+            border.color: "black"
+            color: "light gray"
+            implicitHeight: 30
+
+            Text {
+                text: display
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 5
+            }
+        }
+    }
+
+    ScrollView {
         anchors {
-            top: parent.top
+            top: tableHeader.bottom
             left: parent.left
             right: parent.right
             bottom: buttons_row.top
@@ -31,7 +51,17 @@ Window {
         contentWidth: width
 
         TableView {
-            width: parent.width
+            id: tableView
+            width: root_window.width
+            model: workersModel
+            contentWidth: root_window.width
+
+            delegate: Text {
+                id: text
+                text: " " + display + " "
+                topPadding: 5
+                bottomPadding: 5
+            }
         }
     }
 

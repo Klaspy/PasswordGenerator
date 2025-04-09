@@ -18,7 +18,7 @@ public:
         QString surname;
         quint32 cabinet;
 
-        Worker(const int &id) : id {id}
+        Worker(const quint32 &id) : id {id}
         {}
     };
 
