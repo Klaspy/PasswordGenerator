@@ -8,6 +8,8 @@ TEMPLATE = app
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        database/dbworker.cpp \
+        database/workersmodel.cpp \
         main.cpp
 
 # Default rules for deployment.
@@ -19,3 +21,7 @@ RESOURCES += \
     img.qrc \
     qml.qrc \
     style.qrc
+
+HEADERS += \
+    database/dbworker.h \
+    database/workersmodel.h

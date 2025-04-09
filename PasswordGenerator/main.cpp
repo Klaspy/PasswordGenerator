@@ -1,9 +1,13 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#include "dbworker.h"
+
 int main(int argc, char *argv[])
 {
     QGuiApplication a(argc, argv);
+
+    DbWorker worker;
 
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:/");
