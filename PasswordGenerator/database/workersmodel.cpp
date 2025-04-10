@@ -6,6 +6,7 @@ WorkersModel::WorkersModel(QObject *parent)
 
 QVariant WorkersModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    Q_UNUSED(role)
     if (orientation == Qt::Vertical) return QVariant();
 
     switch (section) {
@@ -20,6 +21,7 @@ QVariant WorkersModel::headerData(int section, Qt::Orientation orientation, int 
 
 int WorkersModel::rowCount(const QModelIndex &parent) const
 {
+    return 1;
     if (parent.isValid())
         return 0;
 

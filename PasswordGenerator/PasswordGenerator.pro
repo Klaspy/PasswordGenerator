@@ -1,4 +1,4 @@
-QT += sql quick qml
+QT += sql quick qml core5compat
 
 CONFIG += c++17
 TEMPLATE = app

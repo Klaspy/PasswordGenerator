@@ -1,4 +1,4 @@
-import QtQuick 2.15
+import QtQuick
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
@@ -29,6 +29,7 @@ Window {
             border.color: "black"
             color: "light gray"
             implicitHeight: 30
+            implicitWidth: 100
 
             Text {
                 text: display
@@ -48,19 +49,27 @@ Window {
             margins: 10
         }
 
-        contentWidth: width
+        contentWidth: width - 20
 
         TableView {
+            x: 0
             id: tableView
-            width: root_window.width
+            width: root_window.width - 20
             model: workersModel
-            contentWidth: root_window.width
+            resizableColumns: false
+            columnWidthProvider: function(column) {
+                return (root_window.width - 20) / 4
+                // switch (column) {
+                // case 0:
+                // }
+            }
 
             delegate: Text {
                 id: text
                 text: " " + display + " "
                 topPadding: 5
                 bottomPadding: 5
+                width: 200
             }
         }
     }
