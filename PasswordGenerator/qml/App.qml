@@ -23,7 +23,8 @@ Window {
     HorizontalHeaderView {
         id: tableHeader
         syncView: tableView
-        model: workersModel
+        // model: workersModel
+        acceptedButtons: Qt.NoButton
 
         delegate: Rectangle {
             border.color: "black"
@@ -36,6 +37,11 @@ Window {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 5
+
+                MouseArea {
+                    anchors.fill: parent
+                    preventStealing: true
+                }
             }
         }
     }
@@ -46,22 +52,16 @@ Window {
             left: parent.left
             right: parent.right
             bottom: buttons_row.top
-            margins: 10
         }
 
-        contentWidth: width - 20
+        clip: true
 
         TableView {
-            x: 0
             id: tableView
-            width: root_window.width - 20
-            model: workersModel
-            resizableColumns: false
+            width: root_window.width
+            model: proxyWorkers
             columnWidthProvider: function(column) {
-                return (root_window.width - 20) / 4
-                // switch (column) {
-                // case 0:
-                // }
+                return (root_window.width) / 4
             }
 
             delegate: Text {
@@ -70,6 +70,8 @@ Window {
                 topPadding: 5
                 bottomPadding: 5
                 width: 200
+                visible: column != 3
+                horizontalAlignment: column == 1 ? Text.AlignRight : Text.AlignLeft
             }
         }
     }
@@ -90,6 +92,9 @@ Window {
             Layout.fillWidth: true
             Layout.fillHeight: true
             icon.source: "qrc:/img/reload.png"
+            icon.width: 24
+            icon.height: 24
+            bgColor: "violet"
         }
 
         Button {

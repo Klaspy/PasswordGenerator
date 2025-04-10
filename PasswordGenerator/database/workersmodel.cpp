@@ -2,7 +2,10 @@
 
 WorkersModel::WorkersModel(QObject *parent)
     : QAbstractTableModel(parent)
-{}
+{
+    dbWorker->addLine(Worker("Тихонов", "Дмитрий", "", 101));
+    workers = dbWorker->getWorkersList();
+}
 
 QVariant WorkersModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -21,11 +24,10 @@ QVariant WorkersModel::headerData(int section, Qt::Orientation orientation, int 
 
 int WorkersModel::rowCount(const QModelIndex &parent) const
 {
-    return 1;
     if (parent.isValid())
         return 0;
 
-    return workers.size();
+    return workers.size() + 1;
 }
 
 int WorkersModel::columnCount(const QModelIndex &parent) const
@@ -41,7 +43,20 @@ QVariant WorkersModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    // FIXME: Implement me!
+    int row = index.row() - 1;
+    if (row < 0) return QVariant();
+
+    int col = index.column();
+    if (role == Qt::DisplayRole)
+    {
+        switch (col)
+        {
+        case 0: return workers.at(row).secondName + " " + workers.at(row).name + " " + workers.at(row).surname;
+        case 1: return workers.at(row).cabinet;
+        case 2: return workers.at(row).password;
+        }
+    }
+
     return QVariant();
 }
 
@@ -69,4 +84,18 @@ bool WorkersModel::removeRows(int row, int count, const QModelIndex &parent)
     // FIXME: Implement me!
     endRemoveRows();
     return true;
+}
+
+ProxyWorkersModel::ProxyWorkersModel(WorkersModel *sourceModel)
+    : QSortFilterProxyModel {sourceModel}
+{
+    setSourceModel(sourceModel);
+
+    invalidate();
+}
+
+bool ProxyWorkersModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+{
+    Q_UNUSED(sourceParent)
+    return sourceRow > 0;
 }

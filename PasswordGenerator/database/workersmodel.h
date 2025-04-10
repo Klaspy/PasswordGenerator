@@ -4,23 +4,14 @@
 #include <QAbstractTableModel>
 #include <QSortFilterProxyModel>
 
+#include "dbworker.h"
+
 class WorkersModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
     explicit WorkersModel(QObject *parent = nullptr);
-
-    struct Worker {
-        const quint32 id;
-        QString secondName;
-        QString name;
-        QString surname;
-        quint32 cabinet;
-
-        Worker(const quint32 &id) : id {id}
-        {}
-    };
 
     // Header:
     QVariant headerData(int section,
@@ -43,7 +34,20 @@ public:
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
 private:
+    DbWorker *dbWorker {new DbWorker(this)};
+
     QList<Worker> workers;
+};
+
+class ProxyWorkersModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+
+public:
+    explicit ProxyWorkersModel(WorkersModel *sourceModel);
+
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 };
 
 #endif // WORKERSMODEL_H

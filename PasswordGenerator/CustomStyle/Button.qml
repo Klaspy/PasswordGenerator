@@ -71,8 +71,8 @@ AbstractButton {
                 id: icon
                 visible: control.display != AbstractButton.TextOnly
                 source: control.icon.source
-                width: source != "" ? control.icon.width : 0
-                height: source != "" ?  control.icon.height : 0
+                width: source !== "" ? control.icon.width : 0
+                height: source !== "" ?  control.icon.height : 0
                 cache: control.icon.cache
             }
 

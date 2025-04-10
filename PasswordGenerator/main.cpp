@@ -9,14 +9,14 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    DbWorker worker;
-
     WorkersModel *model = new WorkersModel(&app);
+    ProxyWorkersModel *proxy = new ProxyWorkersModel(model);
 
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:/");
 
     engine.rootContext()->setContextProperty("workersModel", model);
+    engine.rootContext()->setContextProperty("proxyWorkers", proxy);
 
     const QUrl url(QStringLiteral("qrc:/qml/App.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

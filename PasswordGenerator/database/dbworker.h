@@ -7,6 +7,35 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlTableModel>
+#include <QDate>
+
+struct Worker {
+    quint32 id;
+    QString secondName;
+    QString name;
+    QString surname;
+    quint32 cabinet;
+    QString password;
+    QDate passwordGenDate;
+
+    explicit Worker(const quint32 &id) : id {id}
+    {}
+
+    Worker(const QString &secondName, const QString &name, const QString &surname, const quint32 &cabinet)
+        : id {0}, secondName {secondName}, name {name}, surname {surname}, cabinet {cabinet}
+    {}
+
+    Worker(const quint32 &id, const QString &secondName, const QString &name, const QString &surname,
+           const quint32 &cabinet, const QString &password, const QDate &passwordDate)
+        : id {id}, secondName {secondName}, name {name}, surname {surname}, cabinet {cabinet}
+        , password {password}, passwordGenDate {passwordDate}
+    {}
+
+    Worker(const Worker &other)
+        : id {(quint32)other.id}, secondName {other.secondName}, name {other.name}, surname {other.surname},
+        cabinet {other.cabinet}, password {other.password}, passwordGenDate {other.passwordGenDate}
+    {}
+};
 
 class DbWorker : public QObject
 {
@@ -14,6 +43,12 @@ class DbWorker : public QObject
 
 public:
     explicit DbWorker(QObject *parent = nullptr);
+
+    QPair<bool, std::optional<Worker>> addLine(Worker newWorker);
+    int modifyLine(Worker worker);
+    bool deleteLine(int id);
+
+    QList<Worker> getWorkersList();
 
 private:
     QSqlDatabase db;
