@@ -1,7 +1,9 @@
-QT += sql quick qml core5compat
+QT += sql quick qml core5compat quickcontrols2
 
 CONFIG += c++17
 TEMPLATE = app
+
+RC_ICONS = img/icon.ico
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.

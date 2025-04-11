@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/App.qml</file>
+        <file>qml/AddWorkerDialog.qml</file>
+        <file>qml/InputField.qml</file>
     </qresource>
 </RCC>

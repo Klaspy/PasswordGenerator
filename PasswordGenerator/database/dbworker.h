@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QSqlDatabase>
+#include <QSqlDriver>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlTableModel>
@@ -45,14 +46,17 @@ public:
     explicit DbWorker(QObject *parent = nullptr);
 
     QPair<bool, std::optional<Worker>> addLine(Worker newWorker);
-    int modifyLine(Worker worker);
+    QPair<bool, std::optional<Worker>> modifyLine(Worker worker);
     bool deleteLine(int id);
+
+    bool beginTransaction();
+    void commitTransaction();
+    void rollbackTransaction();
 
     QList<Worker> getWorkersList();
 
 private:
     QSqlDatabase db;
-    QSqlTableModel *workers;
 
     void init();
 };

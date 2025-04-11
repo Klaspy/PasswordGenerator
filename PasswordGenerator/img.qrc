@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>img/reload.png</file>
+        <file>img/bin.png</file>
+        <file>img/edit.png</file>
+        <file>img/icon.ico</file>
     </qresource>
 </RCC>
