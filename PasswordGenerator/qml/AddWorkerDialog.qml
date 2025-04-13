@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Dialogs
 import QtQuick.Controls
 import QtQuick.Layouts
 
@@ -102,6 +101,11 @@ Window {
                     proxyWorkers.setData(proxyWorkers.index(editingRow, 0),
                                          [secondName_field.text, name_field.text, surname_field.text,
                                           Number(cabinet_field.text)], workersModel.roleKey("allEditableRoles_"))
+                }
+                else
+                {
+                    workersModel.addNewWorker([secondName_field.text, name_field.text, surname_field.text,
+                                               Number(cabinet_field.text)])
                 }
 
                 secondName_field.text = ""

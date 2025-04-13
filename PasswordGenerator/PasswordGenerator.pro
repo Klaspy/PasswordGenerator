@@ -1,7 +1,8 @@
-QT += sql quick qml core5compat quickcontrols2
+QT = core sql quick qml core5compat quickcontrols2
 
 CONFIG += c++17
 TEMPLATE = app
+VERSION = 0.0.0.1
 
 RC_ICONS = img/icon.ico
 

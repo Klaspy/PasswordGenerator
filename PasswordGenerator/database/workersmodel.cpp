@@ -132,8 +132,6 @@ bool WorkersModel::insertRows(int row, int count, const QModelIndex &parent)
 
 bool WorkersModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    qDebug() << row;
-    return false;
     if (count + row > workers.size()) count = workers.size() - row;
     if (count < 1) return false;
 
@@ -177,6 +175,23 @@ bool WorkersModel::removeRows(int row, int count, const QModelIndex &parent)
 int WorkersModel::roleKey(QByteArray roleName) const
 {
     return roleNames().key(roleName, -1);
+}
+
+void WorkersModel::addNewWorker(QVariantList workerData)
+{
+    if (workerData.size() != 4) return;
+    auto dbResult = dbWorker->addLine(Worker(workerData.at(0).toString(),
+                                             workerData.at(1).toString(),
+                                             workerData.at(2).toString(),
+                                             workerData.at(3).toInt()));
+    if (dbResult.first)
+    {
+        beginInsertRows({}, workers.size(), workers.size());
+
+        workers.append(dbResult.second.value());
+
+        endInsertRows();
+    }
 }
 
 ProxyWorkersModel::ProxyWorkersModel(WorkersModel *sourceModel)

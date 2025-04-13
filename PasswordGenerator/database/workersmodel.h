@@ -41,6 +41,7 @@ public:
 
 public slots:
     int roleKey(QByteArray roleName) const;
+    void addNewWorker(QVariantList workerData);
 
 private:
     DbWorker *dbWorker {new DbWorker(this)};
