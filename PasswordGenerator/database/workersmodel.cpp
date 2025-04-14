@@ -44,7 +44,9 @@ QVariant WorkersModel::data(const QModelIndex &index, int role) const
 
     int row = index.row();
     int col = index.column();
-    if (role == Qt::DisplayRole)
+    switch (role)
+    {
+    case Qt::DisplayRole:
     {
         switch (col)
         {
@@ -53,9 +55,14 @@ QVariant WorkersModel::data(const QModelIndex &index, int role) const
         case 2: return workers.at(row).password;
         }
     }
-    else if (role == AllEditableRoles)
+    case AllEditableRoles:
     {
         return QVariantList({workers.at(row).secondName, workers.at(row).name, workers.at(row).surname, workers.at(row).cabinet});
+    }
+    case SecondNameRole: return workers.at(row).secondName;
+    case NameRole:       return workers.at(row).name;
+    case SurnameRole:    return workers.at(row).surname;
+    default: return QVariant();
     }
 
     return QVariant();
@@ -113,9 +120,9 @@ QHash<int, QByteArray> WorkersModel::roleNames() const
     QHash<int, QByteArray> result = QAbstractTableModel::roleNames();
 
     result.insert(AllEditableRoles, "allEditableRoles_");
-    // result.insert(SecondNameRole,   "secondName_");
-    // result.insert(NameRole,         "name_");
-    // result.insert(SurnameRole,      "surname_");
+    result.insert(SecondNameRole,   "secondName_");
+    result.insert(NameRole,         "name_");
+    result.insert(SurnameRole,      "surname_");
     // result.insert(PasswordRole,     "password_");
     // result.insert(PasswordGenDate,  "passwordDate_);
 
@@ -198,13 +205,56 @@ ProxyWorkersModel::ProxyWorkersModel(WorkersModel *sourceModel)
     : QSortFilterProxyModel {sourceModel}
 {
     setSourceModel(sourceModel);
+    sort(0, Qt::AscendingOrder);
 
     invalidate();
 }
 
-bool ProxyWorkersModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+bool ProxyWorkersModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
 {
-    Q_UNUSED(sourceParent)
-    return true;
-    return sourceRow > 0;
+    auto source = qobject_cast<WorkersModel*>(sourceModel());
+    // qDebug() << sortOrder();
+    switch (sortColumn())
+    {
+    case 0:
+    {
+            QStringList fullName_left;
+            fullName_left.append(source->data(source_left, WorkersModel::SecondNameRole).toString());
+            fullName_left.append(source->data(source_left, WorkersModel::SecondNameRole).toString());
+            fullName_left.append(source->data(source_left, WorkersModel::SecondNameRole).toString());
+
+            QStringList fullName_right;
+            fullName_right.append(source->data(source_right, WorkersModel::SecondNameRole).toString());
+            fullName_right.append(source->data(source_right, WorkersModel::SecondNameRole).toString());
+            fullName_right.append(source->data(source_right, WorkersModel::SecondNameRole).toString());
+
+            if (fullName_left.at(0) == fullName_right.at(0))
+            {
+                if (fullName_left.at(1) == fullName_right.at(1))
+                {
+                    return fullName_left.at(2) < fullName_right.at(2);
+                }
+                else
+                {
+                    return fullName_left.at(1) < fullName_right.at(1);
+                }
+            }
+            else
+            {
+                return fullName_left.at(0) < fullName_right.at(0);
+            }
+    }
+    case 1:
+    {
+            return source->data(source_left).toInt() < source->data(source_right).toInt();
+    }
+    default: return false;
+    }
+}
+
+void ProxyWorkersModel::sort(int column, Qt::SortOrder order)
+{
+    QSortFilterProxyModel::sort(column, order);
+
+    emit sortChanged();
 }

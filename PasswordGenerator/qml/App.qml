@@ -35,15 +35,62 @@ Window {
             implicitHeight: 30
             implicitWidth: 100
 
+            MouseArea {
+                anchors.fill: parent
+                enabled: index < 2
+                cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+
+                onClicked: {
+                    if (proxyWorkers.sortCol === index)
+                    {
+                        let order = proxyWorkers.sortOrdr === 1 ? 0 : 1;
+                        proxyWorkers.sort(index, order)
+                    }
+                    else
+                    {
+                        proxyWorkers.sort(index, 0)
+                    }
+                }
+            }
+
+            Text {
+                id: leftSortIndicator
+                text: proxyWorkers.sortCol === index ? ">" : ""
+                rotation: proxyWorkers.sortOrdr === 0 ? 90 : -90
+                verticalAlignment: Text.AlignVCenter
+
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    bottom: parent.bottom
+                    leftMargin: 10
+                }
+            }
+
             Text {
                 text: display
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 5
+                anchors {
+                    top: parent.top
+                    left: leftSortIndicator.right
+                    right: rightSortIndicator.left
+                    bottom: parent.bottom
+                }
 
-                MouseArea {
-                    anchors.fill: parent
-                    preventStealing: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            Text {
+                id: rightSortIndicator
+                text: proxyWorkers.sortCol === index ? ">" : ""
+                rotation: proxyWorkers.sortOrdr === 0 ? 90 : -90
+                verticalAlignment: Text.AlignVCenter
+
+                anchors {
+                    top: parent.top
+                    right: parent.right
+                    bottom: parent.bottom
+                    rightMargin: 10
                 }
             }
         }
@@ -70,9 +117,9 @@ Window {
             model: proxyWorkers
             columnWidthProvider: function(column) {
                 switch (column) {
-                case 1: return 100
-                case 3: return 100
-                default: return (root_window.width - 240) / 2
+                case 1: return 120
+                case 3: return 120
+                default: return (root_window.width - 280) / 2
                 }
             }
 

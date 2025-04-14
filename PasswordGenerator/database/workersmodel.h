@@ -10,16 +10,16 @@ class WorkersModel : public QAbstractTableModel
 {
     Q_OBJECT
 
+public:
     enum Roles {
         AllEditableRoles = Qt::UserRole + 1, //0x101
-        // SecondNameRole,
-        // NameRole,
-        // SurnameRole,
+        SecondNameRole,
+        NameRole,
+        SurnameRole,
         // PasswordRole,
         // PasswordGenDate,
     };
 
-public:
     explicit WorkersModel(QObject *parent = nullptr);
 
     // Header:
@@ -53,11 +53,22 @@ class ProxyWorkersModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
+    Q_PROPERTY(int sortCol  READ sortCol  NOTIFY sortChanged FINAL)
+    Q_PROPERTY(int sortOrdr READ sortOrdr NOTIFY sortChanged FINAL)
+
 public:
     explicit ProxyWorkersModel(WorkersModel *sourceModel);
 
+    int sortCol() const {return sortColumn();}
+    int sortOrdr() const {return (int)sortOrder();}
+
+signals:
+    void sortChanged();
+
 protected:
-    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override;
+
+    void sort(int column, Qt::SortOrder order) override;
 };
 
 #endif // WORKERSMODEL_H
