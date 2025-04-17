@@ -54,29 +54,33 @@ QPair<bool, std::optional<Worker> > DbWorker::modifyLine(Worker worker)
     {
         QSqlQuery query;
         query.prepare("UPDATE Workers "
-                      "SET SecondName = \:secondName, Name = :name, Surname = :surname, Cabinet = :cabinet "
+                      "SET SecondName = \:secondName, Name = :name, Surname = :surname, Cabinet = :cabinet, "
+                           "Password = :password, PasswordGenDate = passwordGenDate "
                       "WHERE Id = :id "
                       "RETURNING *");
 
-        query.bindValue(":id",         worker.id);
-        query.bindValue(":secondName", worker.secondName);
-        query.bindValue(":name",       worker.name);
-        query.bindValue(":surname",    worker.surname);
-        query.bindValue(":cabinet",    worker.cabinet);
+        query.bindValue(":id",              worker.id);
+        query.bindValue(":secondName",      worker.secondName);
+        query.bindValue(":name",            worker.name);
+        query.bindValue(":surname",         worker.surname == "" ? QVariant() : worker.surname);
+        query.bindValue(":cabinet",         worker.cabinet);
+        query.bindValue(":password",        worker.password == "" ? QVariant() : worker.password);
+        query.bindValue(":passwordGenDate", worker.passwordGenDate.isValid() ?
+                                                worker.passwordGenDate : QVariant());
 
         if (query.exec())
         {
             if (query.next())
             {
-                Worker worker(query.value("Id"        ).toUInt(),
-                              query.value("SecondName").toString(),
-                              query.value("Name"      ).toString(),
-                              query.value("Surname"   ).toString(),
-                              query.value("Cabinet"   ).toUInt(),
-                              query.value("Password"  ).toString(),
-                              QDate::fromJulianDay(query.value("PasswordGenDate").toInt()));
+                Worker updated(query.value("Id"        ).toUInt(),
+                               query.value("SecondName").toString(),
+                               query.value("Name"      ).toString(),
+                               query.value("Surname"   ).toString(),
+                               query.value("Cabinet"   ).toUInt(),
+                               query.value("Password"  ).toString(),
+                               QDate::fromJulianDay(query.value("PasswordGenDate").toInt()));
 
-                return {true, worker};
+                return {true, updated};
             }
         }
         else

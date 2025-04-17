@@ -16,7 +16,11 @@ Window {
 
     function open(row) {
         editingRow = row
-        console.log(editingRow)
+
+        secondName_field.text = ""
+        name_field.text       = ""
+        surname_field.text    = ""
+        cabinet_field.text    = ""
 
         if (editingRow > -1)
         {

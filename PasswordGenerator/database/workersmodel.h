@@ -3,6 +3,8 @@
 
 #include <QAbstractTableModel>
 #include <QSortFilterProxyModel>
+#include <QRandomGenerator>
+#include <QTime>
 
 #include "dbworker.h"
 
@@ -39,14 +41,20 @@ public:
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
+    void resetPassword(int index);
+
 public slots:
     int roleKey(QByteArray roleName) const;
     void addNewWorker(QVariantList workerData);
+
+    void resetAllPasswords();
 
 private:
     DbWorker *dbWorker {new DbWorker(this)};
 
     QList<Worker> workers;
+
+    QString generatePassword(const Worker &worker);
 };
 
 class ProxyWorkersModel : public QSortFilterProxyModel
@@ -61,6 +69,9 @@ public:
 
     int sortCol() const {return sortColumn();}
     int sortOrdr() const {return (int)sortOrder();}
+
+public slots:
+    void resetPassword(int index);
 
 signals:
     void sortChanged();

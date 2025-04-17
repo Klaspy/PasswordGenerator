@@ -179,6 +179,25 @@ bool WorkersModel::removeRows(int row, int count, const QModelIndex &parent)
     return false;
 }
 
+void WorkersModel::resetPassword(int index)
+{
+    if (index > -1 && index < workers.count())
+    {
+        Worker toUpdate = workers.at(index);
+        toUpdate.password = generatePassword(toUpdate);
+        toUpdate.passwordGenDate = QDate::currentDate();
+
+        QPair<bool, std::optional<Worker>> updated = dbWorker->modifyLine(toUpdate);
+        if (updated.first)
+        {
+            workers[index].password        = updated.second.value().password;
+            workers[index].passwordGenDate = updated.second.value().passwordGenDate;
+
+            emit dataChanged(this->index(index, 2), this->index(index, 2), {Qt::DisplayRole});
+        }
+    }
+}
+
 int WorkersModel::roleKey(QByteArray roleName) const
 {
     return roleNames().key(roleName, -1);
@@ -201,6 +220,34 @@ void WorkersModel::addNewWorker(QVariantList workerData)
     }
 }
 
+void WorkersModel::resetAllPasswords()
+{
+    for (int i = 0; i < workers.size(); i++)
+    {
+        resetPassword(i);
+    }
+
+    emit dataChanged(index(0, 2), index(workers.size() - 1, 2), {Qt::DisplayRole});
+}
+
+QString WorkersModel::generatePassword(const Worker &worker)
+{
+    QString password;
+    password.append(QString::number(worker.cabinet).rightJustified(3, '0'));
+
+    QRandomGenerator rng(QTime::currentTime().msecsSinceStartOfDay());
+    int letterIndex = rng.bounded(32);
+    password.append(QChar(0x410 + letterIndex));
+
+    for (int i = 0; i < 8; i++)
+    {
+        int letterIndex = rng.bounded(32);
+        password.append(QChar(0x430 + letterIndex));
+    }
+
+    return password;
+}
+
 ProxyWorkersModel::ProxyWorkersModel(WorkersModel *sourceModel)
     : QSortFilterProxyModel {sourceModel}
 {
@@ -208,6 +255,15 @@ ProxyWorkersModel::ProxyWorkersModel(WorkersModel *sourceModel)
     sort(0, Qt::AscendingOrder);
 
     invalidate();
+}
+
+void ProxyWorkersModel::resetPassword(int index)
+{
+    QModelIndex idx = this->index(index, 0);
+    if (idx.isValid())
+    {
+        qobject_cast<WorkersModel*>(sourceModel())->resetPassword(mapToSource(idx).row());
+    }
 }
 
 bool ProxyWorkersModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const

@@ -154,6 +154,7 @@ Window {
                                 width: 24 * 3 + spacing * 2
                                 spacing: 6
                                 property int idx: row
+                                property int realIdx: 1
 
                                 Repeater {
                                     id: actionsRepeater
@@ -171,7 +172,7 @@ Window {
 
                                             onClicked: {
                                                 switch (index) {
-                                                case 0: break;
+                                                case 0: proxyWorkers.resetPassword(actionsRow.idx); break;
                                                 case 1: addWorkerDialog.open(actionsRow.idx); break;
                                                 case 2: proxyWorkers.removeRows(actionsRow.idx, 1); break;
                                                 }
@@ -225,6 +226,8 @@ Window {
             icon.width: 24
             icon.height: 24
             bgColor: "violet"
+
+            onClicked: workersModel.resetAllPasswords()
         }
 
         Button {
