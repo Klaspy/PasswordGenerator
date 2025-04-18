@@ -3,5 +3,6 @@
         <file>qml/App.qml</file>
         <file>qml/AddWorkerDialog.qml</file>
         <file>qml/InputField.qml</file>
+        <file>qml/AnimatedToolTip.qml</file>
     </qresource>
 </RCC>

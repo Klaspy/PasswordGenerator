@@ -2,7 +2,7 @@ QT = core sql quick qml core5compat quickcontrols2
 
 CONFIG += c++17
 TEMPLATE = app
-VERSION = 0.0.0.1
+VERSION = 0.0.0.3
 
 RC_ICONS = img/icon.ico
 
@@ -13,7 +13,8 @@ RC_ICONS = img/icon.ico
 SOURCES += \
         database/dbworker.cpp \
         database/workersmodel.cpp \
-        main.cpp
+        main.cpp \
+        xlsxworker.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -27,4 +28,10 @@ RESOURCES += \
 
 HEADERS += \
     database/dbworker.h \
-    database/workersmodel.h
+    database/workersmodel.h \
+    xlsxworker.h
+
+QXLSX_PARENTPATH=./         # current QXlsx path is . (. means curret directory)
+QXLSX_HEADERPATH=./QXlsx/header/  # current QXlsx header path is ./header/
+QXLSX_SOURCEPATH=./QXlsx/source/  # current QXlsx source path is ./source/
+include(QXlsx/QXlsx.pri)

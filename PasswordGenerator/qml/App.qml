@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 import CustomStyle 1.0
 
@@ -140,6 +141,28 @@ Window {
                             leftPadding: horizontalAlignment == Text.AlignLeft ? 20 : 0
                             horizontalAlignment: column == 1 ? Text.AlignHCenter : Text.AlignLeft
                             verticalAlignment:  Text.AlignVCenter
+
+                            MouseArea {
+                                enabled: column == 2 && text.text !== ""
+                                anchors.fill: parent
+                                cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+
+                                onClicked: (mouse) => {
+                                    workersModel.copyStringToClipboard(text.text)
+                                    tooltip.x = mouse.x
+                                    tooltip.y = mouse.y
+                                    tooltip.open()
+                                }
+                            }
+
+                            AnimatedToolTip {
+                                id: tooltip
+                                timeout: 1000
+
+                                Text {
+                                    text: "Текст скопирован в буфер обмена"
+                                }
+                            }
                         }
                     }
 
@@ -235,6 +258,20 @@ Window {
             Layout.fillWidth: true
             Layout.fillHeight: true
             bgColor: "yellow"
+            enabled: tableView.rows > 0
+
+            onClicked: exportDialog.open()
+
+            FileDialog {
+                id: exportDialog
+                fileMode: FileDialog.SaveFile
+                nameFilters: ["Файлы таблиц (*.xlsx)", "Все файлы (*)"]
+                defaultSuffix: "xlsx"
+
+                onAccepted: {
+                    workersModel.exportWorkers(selectedFile)
+                }
+            }
         }
 
         Button {

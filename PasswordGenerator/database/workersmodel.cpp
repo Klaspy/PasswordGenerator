@@ -230,6 +230,16 @@ void WorkersModel::resetAllPasswords()
     emit dataChanged(index(0, 2), index(workers.size() - 1, 2), {Qt::DisplayRole});
 }
 
+void WorkersModel::copyStringToClipboard(QString string) const
+{
+    QGuiApplication::clipboard()->setText(string);
+}
+
+void WorkersModel::exportWorkers(QUrl filePath)
+{
+    exporter->exportWorkers(workers, filePath.toString(QUrl::PreferLocalFile));
+}
+
 QString WorkersModel::generatePassword(const Worker &worker)
 {
     QString password;
@@ -269,7 +279,6 @@ void ProxyWorkersModel::resetPassword(int index)
 bool ProxyWorkersModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
 {
     auto source = qobject_cast<WorkersModel*>(sourceModel());
-    // qDebug() << sortOrder();
     switch (sortColumn())
     {
     case 0:

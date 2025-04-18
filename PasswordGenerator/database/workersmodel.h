@@ -1,12 +1,15 @@
 #ifndef WORKERSMODEL_H
 #define WORKERSMODEL_H
 
+#include <QGuiApplication>
 #include <QAbstractTableModel>
 #include <QSortFilterProxyModel>
 #include <QRandomGenerator>
 #include <QTime>
+#include <QClipboard>
 
 #include "dbworker.h"
+#include "../xlsxworker.h"
 
 class WorkersModel : public QAbstractTableModel
 {
@@ -49,8 +52,13 @@ public slots:
 
     void resetAllPasswords();
 
+    void copyStringToClipboard(QString string) const;
+
+    void exportWorkers(QUrl filePath);
+
 private:
     DbWorker *dbWorker {new DbWorker(this)};
+    XlsxWorker *exporter {new XlsxWorker(this)};
 
     QList<Worker> workers;
 
