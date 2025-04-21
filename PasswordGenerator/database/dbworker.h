@@ -9,6 +9,7 @@
 #include <QSqlError>
 #include <QSqlTableModel>
 #include <QDate>
+#include <QStandardPaths>
 
 struct Worker {
     quint32 id;
@@ -36,6 +37,12 @@ struct Worker {
         : id {(quint32)other.id}, secondName {other.secondName}, name {other.name}, surname {other.surname},
         cabinet {other.cabinet}, password {other.password}, passwordGenDate {other.passwordGenDate}
     {}
+
+    Worker operator = (const Worker &other)
+    {
+        return Worker(other.id, other.secondName, other.name, other.surname,
+                      other.cabinet, other.password, other.passwordGenDate);
+    }
 };
 
 class DbWorker : public QObject

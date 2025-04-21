@@ -53,6 +53,7 @@ QVariant WorkersModel::data(const QModelIndex &index, int role) const
         case 0: return workers.at(row).secondName + " " + workers.at(row).name + " " + workers.at(row).surname;
         case 1: return workers.at(row).cabinet;
         case 2: return workers.at(row).password;
+        default: return "";
         }
     }
     case AllEditableRoles:

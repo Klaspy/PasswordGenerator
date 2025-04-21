@@ -1,10 +1,12 @@
-QT = core sql quick qml core5compat quickcontrols2
+QT = core sql core5compat quickcontrols2
 
 CONFIG += c++17
 TEMPLATE = app
-VERSION = 0.0.0.3
+VERSION = 1.0.0.0
 
 RC_ICONS = img/icon.ico
+QMAKE_TARGET_COMPANY = "https://github.com/Klaspy"
+QMAKE_TARGET_PRODUCT = "Password Generator"
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.

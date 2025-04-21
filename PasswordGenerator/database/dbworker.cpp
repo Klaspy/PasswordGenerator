@@ -4,7 +4,8 @@ DbWorker::DbWorker(QObject *parent)
     : QObject{parent}
 {
     db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"));
-    db.setDatabaseName("database.sqlite");
+    db.setDatabaseName(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + "/database.sqlite");
+    qDebug() << db.databaseName();
 
     db.open();
 
@@ -54,7 +55,7 @@ QPair<bool, std::optional<Worker> > DbWorker::modifyLine(Worker worker)
     {
         QSqlQuery query;
         query.prepare("UPDATE Workers "
-                      "SET SecondName = \:secondName, Name = :name, Surname = :surname, Cabinet = :cabinet, "
+                      "SET SecondName = :secondName, Name = :name, Surname = :surname, Cabinet = :cabinet, "
                            "Password = :password, PasswordGenDate = passwordGenDate "
                       "WHERE Id = :id "
                       "RETURNING *");
