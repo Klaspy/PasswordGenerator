@@ -24,6 +24,7 @@ Component.prototype.createOperations = function()
 Component.prototype.installerLoaded = function()
 {
     installer.setDefaultPageVisible(QInstaller.TargetDirectory, false);
+    installer.setDefaultPageVisible(QInstaller.ComponentSelection, false);
     installer.addWizardPage(component, "TargetWidget", QInstaller.TargetDirectory);
 
     targetDirectoryPage = gui.pageWidgetByObjectName("DynamicTargetWidget");

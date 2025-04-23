@@ -2,7 +2,7 @@
 <Package>
     <DisplayName>Генератор паролей</DisplayName>
     <Description>Приложение для автоматического создания паролей сторудникам.</Description>
-    <Version>1.0.0.1</Version>
+    <Version>1.0.0.2</Version>
     <ReleaseDate>2025-04-21</ReleaseDate>
     <Default>true</Default>
     <Required>true</Required>
