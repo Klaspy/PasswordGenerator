@@ -34,14 +34,21 @@ struct Worker {
     {}
 
     Worker(const Worker &other)
-        : id {(quint32)other.id}, secondName {other.secondName}, name {other.name}, surname {other.surname},
+        : id {other.id}, secondName {other.secondName}, name {other.name}, surname {other.surname},
         cabinet {other.cabinet}, password {other.password}, passwordGenDate {other.passwordGenDate}
     {}
 
     Worker operator = (const Worker &other)
     {
-        return Worker(other.id, other.secondName, other.name, other.surname,
-                      other.cabinet, other.password, other.passwordGenDate);
+        id = other.id;
+        secondName = other.secondName;
+        name = other.name;
+        surname = other.surname;
+        cabinet = other.cabinet;
+        password = other.password;
+        passwordGenDate = other.passwordGenDate;
+
+        return *this;
     }
 };
 

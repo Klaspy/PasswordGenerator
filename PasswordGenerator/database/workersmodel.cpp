@@ -314,7 +314,6 @@ int ProxyWorkersModel::lessThanZeroCol(const QModelIndex &source_left, const QMo
     fullName_right.append(source->data(source_right, WorkersModel::SecondNameRole).toString());
     fullName_right.append(source->data(source_right, WorkersModel::NameRole).toString());
     fullName_right.append(source->data(source_right, WorkersModel::SurnameRole).toString());
-    qDebug() << fullName_left << fullName_right;
 
     if (fullName_left.at(0) == fullName_right.at(0))
     {

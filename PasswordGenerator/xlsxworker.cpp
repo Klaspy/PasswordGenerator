@@ -1,13 +1,28 @@
 #include "xlsxworker.h"
 #include "database/dbworker.h"
 
-bool sortByFullName(const Worker &w1, const Worker &w2)
+bool sortWorkers(const Worker &w1, const Worker &w2)
 {
     if (w1.secondName == w2.secondName)
     {
         if (w1.name == w2.name)
         {
-            return w1.surname < w2.surname;
+            if (w1.surname == w2.surname)
+            {
+                qDebug() << w1.cabinet << w2.cabinet;
+                if (w1.cabinet == w2.cabinet)
+                {
+                    return w1.password < w2.password;
+                }
+                else
+                {
+                    return w1.cabinet < w2.cabinet;
+                }
+            }
+            else
+            {
+                return w1.surname < w2.surname;
+            }
         }
         else
         {
@@ -28,10 +43,9 @@ bool XlsxWorker::exportWorkers(QList<Worker> workers, QString fileName)
 {
     if (workers.isEmpty()) return false;
     QXlsx::Document doc;
-    // doc.setColumnWidth(2, 2, 100);
     doc.setColumnWidth(3, 3, 18);
 
-    std::sort(workers.begin(), workers.end(), &sortByFullName);
+    std::sort(workers.begin(), workers.end(), &sortWorkers);
 
     QXlsx::Format format;
     format.setBorderStyle(QXlsx::Format::BorderThin);
