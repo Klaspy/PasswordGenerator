@@ -41,7 +41,6 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
     void resetPassword(int index);
@@ -86,6 +85,7 @@ signals:
 
 protected:
     bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override;
+    int lessThanZeroCol(const QModelIndex &source_left, const QModelIndex &source_right) const;
 
     void sort(int column, Qt::SortOrder order) override;
 };

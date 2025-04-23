@@ -130,14 +130,6 @@ QHash<int, QByteArray> WorkersModel::roleNames() const
     return result;
 }
 
-bool WorkersModel::insertRows(int row, int count, const QModelIndex &parent)
-{
-    beginInsertRows(parent, row, row + count - 1);
-    // FIXME: Implement me!
-    endInsertRows();
-    return true;
-}
-
 bool WorkersModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     if (count + row > workers.size()) count = workers.size() - row;
@@ -279,42 +271,72 @@ void ProxyWorkersModel::resetPassword(int index)
 
 bool ProxyWorkersModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
 {
+    if (!source_left.isValid() || !source_right.isValid()) return false;
     auto source = qobject_cast<WorkersModel*>(sourceModel());
     switch (sortColumn())
     {
     case 0:
     {
-            QStringList fullName_left;
-            fullName_left.append(source->data(source_left, WorkersModel::SecondNameRole).toString());
-            fullName_left.append(source->data(source_left, WorkersModel::SecondNameRole).toString());
-            fullName_left.append(source->data(source_left, WorkersModel::SecondNameRole).toString());
-
-            QStringList fullName_right;
-            fullName_right.append(source->data(source_right, WorkersModel::SecondNameRole).toString());
-            fullName_right.append(source->data(source_right, WorkersModel::SecondNameRole).toString());
-            fullName_right.append(source->data(source_right, WorkersModel::SecondNameRole).toString());
-
-            if (fullName_left.at(0) == fullName_right.at(0))
-            {
-                if (fullName_left.at(1) == fullName_right.at(1))
-                {
-                    return fullName_left.at(2) < fullName_right.at(2);
-                }
-                else
-                {
-                    return fullName_left.at(1) < fullName_right.at(1);
-                }
-            }
-            else
-            {
-                return fullName_left.at(0) < fullName_right.at(0);
-            }
+        int res = lessThanZeroCol(source_left, source_right);
+        if (res != 0)
+        {
+            return res < 0;
+        }
+        else
+        {
+            return source->data(source->index(source_left.row(), 1)).toInt() < source->data(source->index(source_right.row(), 1)).toInt();
+        }
     }
     case 1:
     {
+        if (source->data(source_left).toInt() == source->data(source_right).toInt())
+        {
+            return lessThanZeroCol(source_left, source_right) < 0;
+        }
+        else
+        {
             return source->data(source_left).toInt() < source->data(source_right).toInt();
+        }
     }
     default: return false;
+    }
+}
+
+int ProxyWorkersModel::lessThanZeroCol(const QModelIndex &source_left, const QModelIndex &source_right) const
+{
+    auto source = qobject_cast<WorkersModel*>(sourceModel());
+    QStringList fullName_left;
+    fullName_left.append(source->data(source_left, WorkersModel::SecondNameRole).toString());
+    fullName_left.append(source->data(source_left, WorkersModel::NameRole).toString());
+    fullName_left.append(source->data(source_left, WorkersModel::SurnameRole).toString());
+
+    QStringList fullName_right;
+    fullName_right.append(source->data(source_right, WorkersModel::SecondNameRole).toString());
+    fullName_right.append(source->data(source_right, WorkersModel::NameRole).toString());
+    fullName_right.append(source->data(source_right, WorkersModel::SurnameRole).toString());
+    qDebug() << fullName_left << fullName_right;
+
+    if (fullName_left.at(0) == fullName_right.at(0))
+    {
+        if (fullName_left.at(1) == fullName_right.at(1))
+        {
+            if (fullName_left.at(2) == fullName_right.at(2))
+            {
+                return 0;
+            }
+            else
+            {
+                return fullName_left.at(2) < fullName_right.at(2) ? -1 : 1;
+            }
+        }
+        else
+        {
+            return fullName_left.at(1) < fullName_right.at(1) ? -1 : 1;
+        }
+    }
+    else
+    {
+        return fullName_left.at(0) < fullName_right.at(0) ? -1 : 1;
     }
 }
 

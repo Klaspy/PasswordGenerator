@@ -2,7 +2,7 @@ QT = core sql core5compat quickcontrols2
 
 CONFIG += c++17
 TEMPLATE = app
-VERSION = 1.0.0.0
+VERSION = 1.0.0.1
 
 RC_ICONS = img/icon.ico
 QMAKE_TARGET_COMPANY = "https://github.com/Klaspy"
